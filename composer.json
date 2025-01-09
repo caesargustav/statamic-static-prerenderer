@@ -1,5 +1,5 @@
 {
-    "name": "caesargustav/mauve-connector",
+    "name": "caesargustav/statamic-mauve-connector",
     "autoload": {
         "psr-4": {
             "Caesargustav\\MauveConnector\\": "src"
