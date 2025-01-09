@@ -1,0 +1,22 @@
+{
+    "name": "caesargustav/mauve-connector",
+    "autoload": {
+        "psr-4": {
+            "Caesargustav\\MauveConnector\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Mauve Statamic Connector",
+            "description": "Mauve Statamic Connector addon"
+        },
+        "laravel": {
+            "providers": [
+                "Caesargustav\\MauveConnector\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}

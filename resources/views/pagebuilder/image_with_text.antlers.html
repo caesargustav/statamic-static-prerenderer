@@ -1,0 +1,33 @@
+{{?
+    $text_width_map = [
+        '25' => 'md:hls-col-span-3',
+        '33' => 'md:hls-col-span-4',
+        '50' => 'md:hls-col-span-6',
+        '66' => 'md:hls-col-span-8',
+        '75' => 'md:hls-w-col-span-9',
+        '100' => 'md:hls-col-span-12',
+    ];
+
+    $image_width_map = [
+        '25' => 'md:hls-w-col-span-9',
+        '33' => 'md:hls-col-span-8',
+        '50' => 'md:hls-col-span-6',
+        '66' => 'md:hls-col-span-4',
+        '75' => 'md:hls-col-span-3',
+        '100' => 'md:hls-col-span-12',
+    ];
+?}}
+
+{{ partial:mauve-connector::pagebuilder/container }}
+    <div class="hls-grid hls-grid-cols-12 hls-gap-4">
+        <div class="hls-col-span-12 {{ text_width_map[text_width] }} hls-prose">
+            {{ text }}
+        </div>
+
+        {{ image }}
+        <figure class="hls-col-span-12 {{ image_width_map[text_width] }} hls-rounded-lg hls-overflow-clip hls-shadow-md {{ if image_layout.value == 'left'}}hls--order-1{{ /if }}">
+            <img class="hls-object-cover hls-h-full hls-w-full" src="{{ permalink }}" alt="{{ alt }}">
+        </figure>
+        {{ /image }}
+    </div>
+{{ /partial:mauve-connector::pagebuilder/container }}

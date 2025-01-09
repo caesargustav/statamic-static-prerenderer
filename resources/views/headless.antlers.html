@@ -1,0 +1,9 @@
+<div style="all:initial">
+    <div class="hls-font-sans hls-leading-normal hls-min-h-dvh" {{ if background_color }}style="background-color: {{ background_color }}"{{ /if }}>
+        {{ pagebuilder }}
+            <section data-pagebuilder="{{ type }}" {{ if attribute_id }}id="{{ attribute_id | dashify }}"{{ /if }}>
+                {{ partial src="mauve-connector::pagebuilder/{type}" }}
+            </section>
+        {{ /pagebuilder }}
+    </div>
+</div>

@@ -1,0 +1,55 @@
+title: 'Mauve Container'
+fields:
+  -
+    handle: container_width
+    field:
+      options:
+        'false': 'Kein Container'
+        hls-max-w-screen-sm: 640px
+        hls-max-w-screen-md: 768px
+        hls-max-w-screen-lg: 1024px
+        hls-max-w-screen-xl: 1280px
+        hls-max-w-screen-2xl: 1536px
+      inline: false
+      cast_booleans: true
+      default: 'false'
+      type: radio
+      display: 'Container Breite'
+      icon: radio
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: false
+      hide_display: false
+  -
+    handle: container_center
+    field:
+      default: true
+      type: toggle
+      display: 'Container zentrieren'
+      icon: toggle
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+  -
+    handle: container_padding
+    field:
+      options:
+        'false': 'Kein Padding'
+        hls-px-2: 8px
+        hls-px-4: 16px
+        hls-px-8: 32px
+        hls-px-12: 48px
+      inline: false
+      cast_booleans: true
+      default: 'false'
+      type: radio
+      display: 'Container Außenabstand'
+      icon: radio
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: false
+      hide_display: false

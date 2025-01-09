@@ -1,0 +1,291 @@
+title: 'Mauve Pagebuilder'
+fields:
+  -
+    handle: background_color
+    field:
+      allow_any: true
+      type: color
+      display: Hintergrundfarbe
+      icon: color
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+  -
+    handle: pagebuilder
+    field:
+      collapse: false
+      previews: true
+      fullscreen: true
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          instructions: null
+          icon: null
+          sets:
+            spacing:
+              display: Abstand
+              instructions: null
+              icon: layout-table-row-insert
+              fields:
+                -
+                  handle: spacing
+                  field:
+                    options:
+                      hls-h-4: Klein
+                      hls-h-8: Mittel
+                      hls-h-16: Groß
+                      hls-h-32: 'Sehr Groß'
+                    taggable: false
+                    push_tags: false
+                    multiple: false
+                    max_items: 1
+                    clearable: true
+                    searchable: true
+                    cast_booleans: false
+                    type: select
+                    display: Abstand
+                    icon: select
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+                    default: h-2
+            image:
+              display: Bildelement
+              instructions: null
+              icon: media-image-picture-orientation
+              fields:
+                -
+                  import: 'mauve-connector::container'
+                -
+                  handle: image
+                  field:
+                    max_files: 1
+                    min_files: 1
+                    mode: list
+                    container: assets
+                    restrict: false
+                    allow_uploads: true
+                    show_filename: true
+                    show_set_alt: true
+                    type: assets
+                    display: Bild
+                    icon: assets
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+            image_with_text:
+              display: 'Bildelement mit Text'
+              instructions: null
+              icon: media-image-picture-orientation
+              fields:
+                -
+                  import: 'mauve-connector::container'
+                -
+                  handle: text
+                  field:
+                    buttons:
+                      - h2
+                      - h3
+                      - bold
+                      - italic
+                      - unorderedlist
+                      - orderedlist
+                      - removeformat
+                      - quote
+                      - anchor
+                      - image
+                      - table
+                    smart_typography: false
+                    save_html: false
+                    inline: false
+                    toolbar_mode: fixed
+                    reading_time: false
+                    word_count: false
+                    fullscreen: true
+                    allow_source: true
+                    enable_input_rules: true
+                    enable_paste_rules: true
+                    remove_empty_nodes: false
+                    antlers: false
+                    link_noopener: false
+                    link_noreferrer: false
+                    target_blank: false
+                    always_show_set_button: false
+                    collapse: false
+                    previews: true
+                    type: bard
+                    display: Text
+                    icon: bard
+                    width: 50
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+                -
+                  handle: text_width
+                  field:
+                    options:
+                      - 25
+                      - 33
+                      - 50
+                      - 66
+                      - 75
+                    default: 50
+                    type: width
+                    display: 'Textbreite Desktop'
+                    icon: width
+                    width: 33
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+                -
+                  handle: image
+                  field:
+                    max_files: 1
+                    min_files: 1
+                    mode: list
+                    container: assets
+                    restrict: false
+                    allow_uploads: true
+                    show_filename: true
+                    show_set_alt: true
+                    type: assets
+                    display: Bild
+                    icon: assets
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+                    width: 66
+                -
+                  handle: image_layout
+                  field:
+                    options:
+                      left: 'Bild links'
+                      right: 'Bild rechts'
+                    inline: true
+                    cast_booleans: false
+                    default: left
+                    type: radio
+                    display: Bildausrichtung
+                    icon: radio
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+                    width: 33
+            wysiwyg:
+              display: WYSIWYG
+              instructions: null
+              icon: edit-paint-palette
+              fields:
+                -
+                  import: 'mauve-connector::container'
+                -
+                  handle: wysiwyg
+                  field:
+                    buttons:
+                      - h2
+                      - h3
+                      - bold
+                      - italic
+                      - unorderedlist
+                      - orderedlist
+                      - removeformat
+                      - quote
+                      - anchor
+                      - image
+                      - table
+                    smart_typography: true
+                    save_html: false
+                    inline: false
+                    toolbar_mode: fixed
+                    reading_time: false
+                    word_count: false
+                    fullscreen: true
+                    allow_source: true
+                    enable_input_rules: true
+                    enable_paste_rules: true
+                    remove_empty_nodes: false
+                    antlers: false
+                    link_noopener: false
+                    link_noreferrer: false
+                    target_blank: false
+                    always_show_set_button: false
+                    collapse: false
+                    previews: true
+                    type: bard
+                    display: WYSIWYG
+                    icon: bard
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+            infobox:
+              display: Infobox
+              instructions: null
+              icon: alert-warning-exclamation-mark
+              fields:
+                -
+                  import: 'mauve-connector::container'
+                -
+                  handle: wysiwyg
+                  field:
+                    buttons:
+                      - h2
+                      - h3
+                      - bold
+                      - italic
+                      - unorderedlist
+                      - orderedlist
+                      - removeformat
+                      - quote
+                      - anchor
+                      - image
+                      - table
+                    smart_typography: false
+                    save_html: false
+                    inline: false
+                    toolbar_mode: fixed
+                    reading_time: false
+                    word_count: false
+                    fullscreen: true
+                    allow_source: true
+                    enable_input_rules: true
+                    enable_paste_rules: true
+                    remove_empty_nodes: false
+                    antlers: false
+                    link_noopener: false
+                    link_noreferrer: false
+                    target_blank: false
+                    always_show_set_button: false
+                    collapse: false
+                    previews: true
+                    type: bard
+                    display: WYSIWYG
+                    icon: bard
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    replicator_preview: true
+                    hide_display: false
+      type: replicator
+      display: Pagebuilder
+      icon: replicator
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
