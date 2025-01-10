@@ -33,7 +33,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadRoutes();
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/static-prerenderer')
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer')
         ]);
 
         app()->bind(TailwindCSS::class, fn () => new TailwindCSS($this->getAddon()->directory() . 'bin',));

@@ -59,7 +59,7 @@ fields:
               icon: media-image-picture-orientation
               fields:
                 -
-                  import: 'static-prerenderer::container'
+                  import: 'statamic-static-prerenderer::container'
                 -
                   handle: image
                   field:
@@ -85,7 +85,7 @@ fields:
               icon: media-image-picture-orientation
               fields:
                 -
-                  import: 'static-prerenderer::container'
+                  import: 'statamic-static-prerenderer::container'
                 -
                   handle: text
                   field:
@@ -191,7 +191,7 @@ fields:
               icon: edit-paint-palette
               fields:
                 -
-                  import: 'static-prerenderer::container'
+                  import: 'statamic-static-prerenderer::container'
                 -
                   handle: wysiwyg
                   field:
@@ -239,7 +239,7 @@ fields:
               icon: alert-warning-exclamation-mark
               fields:
                 -
-                  import: 'static-prerenderer::container'
+                  import: 'statamic-static-prerenderer::container'
                 -
                   handle: wysiwyg
                   field:

@@ -45,9 +45,9 @@ class PrerenderedEntry
         }
 
         $template = app(View::class)
-            ->make('static-prerenderer::headless');
+            ->make('statamic-static-prerenderer::headless');
 
-        $this->entry->layout('static-prerenderer::layout');
+        $this->entry->layout('statamic-static-prerenderer::layout');
         $this->entry->template($template->template());
 
         $html = $this->entry->toResponse(request())->content();
