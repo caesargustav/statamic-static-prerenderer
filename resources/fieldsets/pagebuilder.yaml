@@ -1,4 +1,4 @@
-title: 'Mauve Pagebuilder'
+title: 'Pagebuilder'
 fields:
   -
     handle: background_color
@@ -59,7 +59,7 @@ fields:
               icon: media-image-picture-orientation
               fields:
                 -
-                  import: 'mauve-connector::container'
+                  import: 'static-prerenderer::container'
                 -
                   handle: image
                   field:
@@ -85,7 +85,7 @@ fields:
               icon: media-image-picture-orientation
               fields:
                 -
-                  import: 'mauve-connector::container'
+                  import: 'static-prerenderer::container'
                 -
                   handle: text
                   field:
@@ -191,7 +191,7 @@ fields:
               icon: edit-paint-palette
               fields:
                 -
-                  import: 'mauve-connector::container'
+                  import: 'static-prerenderer::container'
                 -
                   handle: wysiwyg
                   field:
@@ -239,7 +239,7 @@ fields:
               icon: alert-warning-exclamation-mark
               fields:
                 -
-                  import: 'mauve-connector::container'
+                  import: 'static-prerenderer::container'
                 -
                   handle: wysiwyg
                   field:

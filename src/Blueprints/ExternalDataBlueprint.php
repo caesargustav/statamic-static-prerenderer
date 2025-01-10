@@ -1,10 +1,10 @@
 <?php
 
-namespace Caesargustav\MauveConnector\Blueprints;
+namespace Caesargustav\StaticPrerenderer\Blueprints;
 
 use Statamic\Facades\Blueprint as StatamicBlueprint;
 
-class MauveBlueprint
+class ExternalDataBlueprint
 {
     public static function requestBlueprint()
     {

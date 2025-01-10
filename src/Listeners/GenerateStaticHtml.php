@@ -1,8 +1,8 @@
 <?php
 
-namespace Caesargustav\MauveConnector\Listeners;
+namespace Caesargustav\StaticPrerenderer\Listeners;
 
-use Caesargustav\MauveConnector\PrerenderedEntry;
+use Caesargustav\StaticPrerenderer\PrerenderedEntry;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntrySaved;
 

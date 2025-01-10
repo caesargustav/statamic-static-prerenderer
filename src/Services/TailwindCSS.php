@@ -1,6 +1,6 @@
 <?php
 
-namespace Caesargustav\MauveConnector\Services;
+namespace Caesargustav\StaticPrerenderer\Services;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;

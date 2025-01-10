@@ -1,8 +1,8 @@
 <?php
 
-namespace Caesargustav\MauveConnector;
+namespace Caesargustav\StaticPrerenderer;
 
-use Caesargustav\MauveConnector\Services\TailwindCSS;
+use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Entries\Entry;
@@ -36,8 +36,8 @@ class PrerenderedEntry
 
     public function prerender(): string
     {
-        $path = 'public/mauve-statamic-connector/' . $this->entry->id() . '.html';
-        $cssPath = 'public/mauve-statamic-connector/' . $this->entry->id() . '.css';
+        $path = 'public/statamic-static-prerenderer/' . $this->entry->id() . '.html';
+        $cssPath = 'public/statamic-static-prerenderer/' . $this->entry->id() . '.css';
         $lastModified = $this->entry->lastModified();
 
         if (Storage::exists($path) && Storage::lastModified($path) >= $lastModified->timestamp) {
@@ -45,9 +45,9 @@ class PrerenderedEntry
         }
 
         $template = app(View::class)
-            ->make('mauve-connector::headless');
+            ->make('static-prerenderer::headless');
 
-        $this->entry->layout('mauve-connector::layout');
+        $this->entry->layout('static-prerenderer::layout');
         $this->entry->template($template->template());
 
         $html = $this->entry->toResponse(request())->content();

@@ -1,12 +1,12 @@
 <?php
 
-namespace Caesargustav\MauveConnector\Listeners;
+namespace Caesargustav\StaticPrerenderer\Listeners;
 
-use Caesargustav\MauveConnector\Blueprints\MauveBlueprint;
+use Caesargustav\StaticPrerenderer\Blueprints\ExternalDataBlueprint;
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Support\Str;
 
-class AppendMauveBlueprintListener
+class AppendExternalDataBluetprint
 {
     public function handle(EntryBlueprintFound $event): void
     {
@@ -18,8 +18,8 @@ class AppendMauveBlueprintListener
         $blueprint = $event->blueprint;
         $contents = $blueprint->contents();
 
-        $mauveBlueprint = MauveBlueprint::requestBlueprint();
-        $contents['tabs']['Mauve'] = $mauveBlueprint->contents()['tabs']['main'];
+        $externalDataBlueprint = ExternalDataBlueprint::requestBlueprint();
+        $contents['tabs']['Externe Daten'] = $externalDataBlueprint->contents()['tabs']['main'];
 
         $blueprint->setContents($contents);
     }

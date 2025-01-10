@@ -1,23 +1,19 @@
-# Mauve Statamic Connector
+# Statamic Static Prerenderer
 
-> Mauve Statamic Connector is a Statamic addon that does something pretty neat.
+> A Statamic addon that prerenders your site to static HTML files which can be fetched via an API.
 
 ## Features
 
 This addon does:
 
-- This
-- And this
-- And even this
+- Prerender static page content
+- Inserts Tailwind CSS styles
+- Makes sure, styles are correctly isolated so content can be loaded into existing pages
 
 ## How to Install
 
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or run the following command from your project root:
 
 ``` bash
-composer require caesargustav/statamic-mauve-connector
+composer require caesargustav/statamic-static-prerenderer
 ```
-
-## How to Use
-
-Here's where you can explain how to use this wonderful addon.

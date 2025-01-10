@@ -1,18 +1,18 @@
 {
-    "name": "caesargustav/statamic-mauve-connector",
+    "name": "caesargustav/statamic-static-prerenderer",
     "autoload": {
         "psr-4": {
-            "Caesargustav\\MauveConnector\\": "src"
+            "Caesargustav\\StaticPrerenderer\\": "src"
         }
     },
     "extra": {
         "statamic": {
-            "name": "Mauve Statamic Connector",
-            "description": "Mauve Statamic Connector addon"
+            "name": "Static Prerenderer",
+            "description": "A Statamic addon that prerenders your site to static HTML files which can be fetched via an API."
         },
         "laravel": {
             "providers": [
-                "Caesargustav\\MauveConnector\\ServiceProvider"
+                "Caesargustav\\StaticPrerenderer\\ServiceProvider"
             ]
         }
     },

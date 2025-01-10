@@ -1,8 +1,8 @@
 <?php
 
-namespace Caesargustav\MauveConnector;
+namespace Caesargustav\StaticPrerenderer;
 
-use Caesargustav\MauveConnector\Services\TailwindCSS;
+use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Statamic\Events\EntryBlueprintFound;
@@ -18,7 +18,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         EntryBlueprintFound::class => [
-            Listeners\AppendMauveBlueprintListener::class,
+            Listeners\AppendExternalDataBluetprint::class,
         ],
         EntryCreated::class => [
             Listeners\GenerateStaticHtml::class
@@ -33,7 +33,7 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadRoutes();
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/mauve-connector')
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/static-prerenderer')
         ]);
 
         app()->bind(TailwindCSS::class, fn () => new TailwindCSS($this->getAddon()->directory() . 'bin',));
@@ -46,7 +46,7 @@ class ServiceProvider extends AddonServiceProvider
     protected function loadRoutes(): void
     {
         Route::middleware('api')
-            ->prefix('api/mauve-connector')
+            ->prefix('api/static-prerenderer')
             ->group(function () {
                 Route::get('/', function (Request $request) {
                     $entries = Entry::query()
