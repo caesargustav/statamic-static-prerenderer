@@ -74,6 +74,7 @@ class TailwindCSS
             'x86_64' => 'x64',
             'arm64' => 'arm64',
             'armv7l' => 'armv7',
+            'aarch64' => 'arm64',
         ];
 
         if (! isset($osMap[$os]) || ! isset($machineMap[$machineType])) {
