@@ -44,11 +44,11 @@ class PrerenderedEntity
             return Storage::get($path);
         }
 
-        $template = app(View::class)
-            ->make('statamic-static-prerenderer::headless');
-
         $this->entity->layout('statamic-static-prerenderer::layout');
-        $this->entity->template($template->template());
+
+        if ($this->entity->template() === 'default') {
+            $this->entity->template('statamic-static-prerenderer::headless');
+        }
 
         $html = $this->entity->toResponse(request())->content();
 
