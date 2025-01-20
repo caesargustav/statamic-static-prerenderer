@@ -6,6 +6,7 @@ use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Statamic\Events\EntryBlueprintFound;
+use Statamic\Events\TermBlueprintFound;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntrySaved;
 use Statamic\Facades\Entry;
@@ -19,6 +20,9 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         EntryBlueprintFound::class => [
+            Listeners\AppendExternalDataBluetprint::class,
+        ],
+        TermBlueprintFound::class => [
             Listeners\AppendExternalDataBluetprint::class,
         ],
         EntryCreated::class => [
