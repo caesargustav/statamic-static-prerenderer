@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Contracts\Taxonomies\Term as TermContract;
 use Statamic\Entries\Entry;
+use Statamic\Taxonomies\LocalizedTerm;
 use Statamic\Taxonomies\Term;
 use Statamic\View\View;
 
@@ -16,7 +17,7 @@ class PrerenderedEntity
     {
     }
 
-    public static function create(Entry|EntryContract|Term|TermContract $entry): PrerenderedEntity
+    public static function create(Entry|EntryContract|LocalizedTerm|Term|TermContract $entry): PrerenderedEntity
     {
         return new static($entry);
     }
