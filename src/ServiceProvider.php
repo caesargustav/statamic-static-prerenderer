@@ -54,6 +54,14 @@ class ServiceProvider extends AddonServiceProvider
                         ->where('published', '=', true)
                         ->where('url', '!=', '/')
                         ->get(['id', 'slug', 'url'])
+                        ->map(function ($entry) {
+                            return [
+                                'id' => $entry->id(),
+                                'type' => 'entry',
+                                'slug' => $entry->slug(),
+                                'url' => $entry->url(),
+                            ];
+                        })
                         ->toArray();
 
                     $terms = Term::query()
@@ -63,6 +71,7 @@ class ServiceProvider extends AddonServiceProvider
                         ->map(function ($term) {
                             return [
                                 'id' => $term->id(),
+                                'type' => 'term',
                                 'slug' => $term->slug(),
                                 'url' => $term->url(),
                             ];
@@ -72,8 +81,12 @@ class ServiceProvider extends AddonServiceProvider
                     return response()->json(array_merge($entries, $terms));
                 });
 
-                Route::get('{entryId}', function (Request $request, string $entryId) {
-                    $prerenderedEntry = PrerenderedEntry::create(Entry::find($entryId));
+                Route::get('{type}/{entryId}', function (Request $request, string $type, string $entryId) {
+                    match ($type) {
+                        'entry' => $entity = Entry::find($entryId),
+                        'term' => $entity = Term::find($entryId),
+                    };
+                    $prerenderedEntry = PrerenderedEntity::create($entity);
 
                     return response()->json([
                         'data' => $prerenderedEntry->data(),

@@ -5,28 +5,30 @@ namespace Caesargustav\StaticPrerenderer;
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
+use Statamic\Contracts\Taxonomies\Term as TermContract;
 use Statamic\Entries\Entry;
+use Statamic\Taxonomies\Term;
 use Statamic\View\View;
 
-class PrerenderedEntry
+class PrerenderedEntity
 {
-    public function __construct(private readonly Entry $entry)
+    public function __construct(private readonly Entry|Term $entity)
     {
     }
 
-    public static function create(Entry|EntryContract $entry): PrerenderedEntry
+    public static function create(Entry|EntryContract|Term|TermContract $entry): PrerenderedEntity
     {
         return new static($entry);
     }
 
     public function id(): string
     {
-        return $this->entry->id();
+        return $this->entity->id();
     }
 
     public function data(): array
     {
-        return $this->entry->data()->toArray();
+        return $this->entity->data()->toArray();
     }
 
     public function html(): string
@@ -36,9 +38,9 @@ class PrerenderedEntry
 
     public function prerender(): string
     {
-        $path = 'public/statamic-static-prerenderer/' . $this->entry->id() . '.html';
-        $cssPath = 'public/statamic-static-prerenderer/' . $this->entry->id() . '.css';
-        $lastModified = $this->entry->lastModified();
+        $path = 'public/statamic-static-prerenderer/' . $this->entity->id() . '.html';
+        $cssPath = 'public/statamic-static-prerenderer/' . $this->entity->id() . '.css';
+        $lastModified = $this->entity->lastModified();
 
         if (Storage::exists($path) && Storage::lastModified($path) >= $lastModified->timestamp) {
             return Storage::get($path);
@@ -47,10 +49,10 @@ class PrerenderedEntry
         $template = app(View::class)
             ->make('statamic-static-prerenderer::headless');
 
-        $this->entry->layout('statamic-static-prerenderer::layout');
-        $this->entry->template($template->template());
+        $this->entity->layout('statamic-static-prerenderer::layout');
+        $this->entity->template($template->template());
 
-        $html = $this->entry->toResponse(request())->content();
+        $html = $this->entity->toResponse(request())->content();
 
         $css = app(TailwindCSS::class)->process($cssPath);
 
