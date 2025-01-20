@@ -18,6 +18,7 @@ class TailwindCSS
         $path = app()->resourcePath('tailwind.config.js');
         $config = File::exists($path) ? $path : '../resources/tailwind.config.js';
 
+        // TODO make input path configurable
         $command = sprintf(
             './%s --input %s --output %s --config %s',
             self::getBinaryName(),
