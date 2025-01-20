@@ -9,6 +9,7 @@ use Statamic\Events\EntryBlueprintFound;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntrySaved;
 use Statamic\Facades\Entry;
+use Statamic\Facades\Term;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
@@ -54,7 +55,16 @@ class ServiceProvider extends AddonServiceProvider
                         ->where('url', '!=', '/')
                         ->get(['id', 'slug', 'url']);
 
-                    return response()->json($entries);
+                    $terms = Term::query()->where('published', '=', true)->where('entries_count', '>=', 1)->get(['id', 'slug', 'url'])
+                        ->map(function ($term) {
+                            return [
+                                'id' => $term->id(),
+                                'slug' => $term->slug(),
+                                'url' => $term->url(),
+                            ];
+                        });
+
+                    return response()->json(array_merge($entries, $terms));
                 });
 
                 Route::get('{entryId}', function (Request $request, string $entryId) {
