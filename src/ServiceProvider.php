@@ -53,16 +53,21 @@ class ServiceProvider extends AddonServiceProvider
                     $entries = Entry::query()
                         ->where('published', '=', true)
                         ->where('url', '!=', '/')
-                        ->get(['id', 'slug', 'url']);
+                        ->get(['id', 'slug', 'url'])
+                        ->toArray();
 
-                    $terms = Term::query()->where('published', '=', true)->where('entries_count', '>=', 1)->get(['id', 'slug', 'url'])
+                    $terms = Term::query()
+                        ->where('published', '=', true)
+                        ->where('entries_count', '>=', 1)
+                        ->get(['id', 'slug', 'url'])
                         ->map(function ($term) {
                             return [
                                 'id' => $term->id(),
                                 'slug' => $term->slug(),
                                 'url' => $term->url(),
                             ];
-                        })->toArray();
+                        })
+                        ->toArray();
 
                     return response()->json(array_merge($entries, $terms));
                 });
