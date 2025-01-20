@@ -62,7 +62,7 @@ class ServiceProvider extends AddonServiceProvider
                                 'slug' => $term->slug(),
                                 'url' => $term->url(),
                             ];
-                        });
+                        })->toArray();
 
                     return response()->json(array_merge($entries, $terms));
                 });
