@@ -6,18 +6,15 @@ use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Contracts\Taxonomies\Term as TermContract;
-use Statamic\Entries\Entry;
-use Statamic\Taxonomies\LocalizedTerm;
-use Statamic\Taxonomies\Term;
 use Statamic\View\View;
 
 class PrerenderedEntity
 {
-    public function __construct(private readonly Entry|Term $entity)
+    public function __construct(private readonly EntryContract|TermContract $entity)
     {
     }
 
-    public static function create(Entry|EntryContract|LocalizedTerm|Term|TermContract $entry): PrerenderedEntity
+    public static function create(EntryContract|TermContract $entry): PrerenderedEntity
     {
         return new static($entry);
     }
