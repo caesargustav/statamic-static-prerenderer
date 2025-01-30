@@ -30,6 +30,7 @@ class ServiceProvider extends AddonServiceProvider
         ],
         EntrySaved::class => [
             Listeners\GenerateStaticHtml::class,
+            Listeners\ClearRelatedCaches::class
         ],
     ];
 
@@ -38,10 +39,10 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadRoutes();
 
         $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer'),
         ]);
 
-        app()->bind(TailwindCSS::class, fn () => new TailwindCSS($this->getAddon()->directory().'bin'));
+        app()->bind(TailwindCSS::class, fn () => new TailwindCSS($this->getAddon()->directory() . 'bin'));
 
         Statamic::afterInstalled(function ($command) {
             app()->get(TailwindCSS::class)->downloadBinary();
