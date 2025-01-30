@@ -6,13 +6,10 @@ use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Contracts\Taxonomies\Term as TermContract;
-use Statamic\View\View;
 
 class PrerenderedEntity
 {
-    public function __construct(private readonly EntryContract|TermContract $entity)
-    {
-    }
+    public function __construct(private readonly EntryContract|TermContract $entity) {}
 
     public static function create(EntryContract|TermContract $entry): PrerenderedEntity
     {
@@ -36,8 +33,8 @@ class PrerenderedEntity
 
     public function prerender(): string
     {
-        $path = 'public/statamic-static-prerenderer/' . $this->entity->id() . '.html';
-        $cssPath = 'public/statamic-static-prerenderer/' . $this->entity->id() . '.css';
+        [$path, $cssPath] = $this->cachePaths();
+
         $lastModified = $this->entity->lastModified();
 
         if (Storage::exists($path) && Storage::lastModified($path) >= $lastModified->timestamp) {
@@ -56,8 +53,24 @@ class PrerenderedEntity
 
         $style = sprintf('<style>%s</style>', $css);
 
-        Storage::put($path, $style . $html);
+        Storage::put($path, $style.$html);
 
         return Storage::get($path);
+    }
+
+    public function clearCache(): void
+    {
+        [$path, $cssPath] = $this->cachePaths();
+
+        Storage::delete($path);
+        Storage::delete($cssPath);
+    }
+
+    protected function cachePaths(): array
+    {
+        return [
+            'public/statamic-static-prerenderer/'.$this->entity->id().'.html',
+            'public/statamic-static-prerenderer/'.$this->entity->id().'.css',
+        ];
     }
 }

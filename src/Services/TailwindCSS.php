@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class TailwindCSS
 {
-    public function __construct(protected string $binaryPath)
-    {
-    }
+    public function __construct(protected string $binaryPath) {}
 
     public function process(string $output): ?string
     {
@@ -22,7 +20,7 @@ class TailwindCSS
         $command = sprintf(
             './%s --input %s --output %s --config %s',
             self::getBinaryName(),
-            $this->binaryPath . '/../resources/app.css',
+            $this->binaryPath.'/../resources/app.css',
             Storage::path($output),
             $config
         );
@@ -87,6 +85,6 @@ class TailwindCSS
 
     private function getFullBinaryPath(): string
     {
-        return $this->binaryPath . '/' . self::getBinaryName();
+        return $this->binaryPath.'/'.self::getBinaryName();
     }
 }

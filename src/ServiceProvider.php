@@ -6,9 +6,9 @@ use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Statamic\Events\EntryBlueprintFound;
-use Statamic\Events\TermBlueprintFound;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntrySaved;
+use Statamic\Events\TermBlueprintFound;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Term;
 use Statamic\Providers\AddonServiceProvider;
@@ -26,10 +26,10 @@ class ServiceProvider extends AddonServiceProvider
             Listeners\AppendExternalDataBluetprint::class,
         ],
         EntryCreated::class => [
-            Listeners\GenerateStaticHtml::class
+            Listeners\GenerateStaticHtml::class,
         ],
         EntrySaved::class => [
-            Listeners\GenerateStaticHtml::class
+            Listeners\GenerateStaticHtml::class,
         ],
     ];
 
@@ -38,10 +38,10 @@ class ServiceProvider extends AddonServiceProvider
         $this->loadRoutes();
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer')
+            __DIR__.'/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer'),
         ]);
 
-        app()->bind(TailwindCSS::class, fn () => new TailwindCSS($this->getAddon()->directory() . 'bin',));
+        app()->bind(TailwindCSS::class, fn () => new TailwindCSS($this->getAddon()->directory().'bin'));
 
         Statamic::afterInstalled(function ($command) {
             app()->get(TailwindCSS::class)->downloadBinary();
@@ -94,7 +94,7 @@ class ServiceProvider extends AddonServiceProvider
 
                     return response()->json([
                         'data' => $prerenderedEntry->data(),
-                        'html' => $prerenderedEntry->html()
+                        'html' => $prerenderedEntry->html(),
                     ]);
                 });
             });
