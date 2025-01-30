@@ -29,7 +29,6 @@ class ServiceProvider extends AddonServiceProvider
             Listeners\GenerateStaticHtml::class,
         ],
         EntrySaved::class => [
-            Listeners\ClearRelatedCaches::class,
             Listeners\GenerateStaticHtml::class
         ],
     ];
