@@ -16,7 +16,6 @@ class TailwindCSS
         $path = app()->resourcePath('tailwind.config.js');
         $config = File::exists($path) ? $path : '../resources/tailwind.config.js';
 
-        // TODO make input path configurable
         $command = sprintf(
             './%s --input %s --output %s --config %s',
             self::getBinaryName(),
@@ -42,7 +41,8 @@ class TailwindCSS
                 return;
             }
 
-            $latestRelease = Http::get('https://api.github.com/repos/tailwindlabs/tailwindcss/releases/latest')
+            // Pin release to v3.4.17
+            $latestRelease = Http::get('https://api.github.com/repos/tailwindlabs/tailwindcss/releases/191250475')
                 ->collect('assets')
                 ->filter(fn ($asset) => $asset['name'] === $binaryName)
                 ->first();
