@@ -7,7 +7,7 @@ use Statamic\Events\EntryBlueprintFound;
 use Statamic\Events\TermBlueprintFound;
 use Statamic\Support\Str;
 
-class AppendExternalDataBluetprint
+class AppendExternalDataBlueprint
 {
     public function handle(EntryBlueprintFound|TermBlueprintFound $event): void
     {

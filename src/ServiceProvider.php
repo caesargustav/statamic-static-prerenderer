@@ -20,10 +20,10 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         EntryBlueprintFound::class => [
-            Listeners\AppendExternalDataBluetprint::class,
+            Listeners\AppendExternalDataBlueprint::class,
         ],
         TermBlueprintFound::class => [
-            Listeners\AppendExternalDataBluetprint::class,
+            Listeners\AppendExternalDataBlueprint::class,
         ],
         EntryCreated::class => [
             Listeners\GenerateStaticHtml::class,
@@ -90,7 +90,7 @@ class ServiceProvider extends AddonServiceProvider
                         'entry' => $entity = Entry::find($entryId),
                         'term' => $entity = Term::find($entryId),
                     };
-                    $prerenderedEntry = PrerenderedEntity::create($entity);
+                    $prerenderedEntry = PrerenderedEntity::create($entity, $request);
 
                     return response()->json([
                         'data' => $prerenderedEntry->data(),
