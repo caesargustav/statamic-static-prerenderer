@@ -13,15 +13,18 @@ class TailwindCSS
 
     public function process(string $output): ?string
     {
-        $path = app()->resourcePath('tailwind.config.js');
-        $config = File::exists($path) ? $path : '../resources/tailwind.config.js';
+        $customTailwindCssConfigPath = app()->resourcePath('tailwind.config.js');
+        $tailwindCssConfigPath = File::exists($customTailwindCssConfigPath) ? $customTailwindCssConfigPath : '../resources/tailwind.config.js';
+
+        $customCssPath = app()->resourcePath('css/headless.css');
+        $cssPath = File::exists($customCssPath) ? $customCssPath : $this->binaryPath . '/../resources/css/headless.css';
 
         $command = sprintf(
             './%s --input %s --output %s --config %s',
             self::getBinaryName(),
-            $this->binaryPath.'/../resources/app.css',
+            $cssPath,
             Storage::path($output),
-            $config
+            $tailwindCssConfigPath
         );
 
         Process::path($this->binaryPath)
