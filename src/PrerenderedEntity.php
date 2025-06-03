@@ -4,6 +4,7 @@ namespace Caesargustav\StaticPrerenderer;
 
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Contracts\Taxonomies\Term as TermContract;
@@ -55,6 +56,10 @@ class PrerenderedEntity
         if ($this->entity->template() === 'default') {
             $this->entity->template('statamic-static-prerenderer::headless');
         }
+
+        // Set a custom path resolver that returns a relative URL
+        // If we don't do this, the paginator resolves the API URL as the URL is resolved from the request
+        Paginator::currentPathResolver(fn () => '');
 
         $html = $this->entity->toResponse(request())->content();
 
