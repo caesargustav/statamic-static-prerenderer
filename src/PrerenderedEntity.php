@@ -75,9 +75,11 @@ class PrerenderedEntity
 
     private function cachePaths(): array
     {
+        $id = $this->entity->id() . md5(json_encode($this->request->query->all()));
+
         return [
-            'public/statamic-static-prerenderer/'.$this->entity->id().'.html',
-            'public/statamic-static-prerenderer/'.$this->entity->id().'.css',
+            'public/statamic-static-prerenderer/'.$id.'.html',
+            'public/statamic-static-prerenderer/'.$id.'.css',
         ];
     }
 
