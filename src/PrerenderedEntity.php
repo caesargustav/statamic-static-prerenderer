@@ -47,7 +47,7 @@ class PrerenderedEntity
             return view('statamic-static-prerenderer::login');
         }
 
-        if (Storage::exists($path) && Storage::lastModified($path) >= $lastModified->timestamp) {
+        if (Storage::exists($path) && Storage::lastModified($path) >= $lastModified->timestamp && $this->request) {
             return Storage::get($path);
         }
 
@@ -75,7 +75,7 @@ class PrerenderedEntity
 
     private function cachePaths(): array
     {
-        $id = $this->entity->id() . md5(json_encode($this->request->query->all()));
+        $id = $this->entity->id() . md5(json_encode($this->request?->query->all()));
 
         return [
             'public/statamic-static-prerenderer/'.$id.'.html',
