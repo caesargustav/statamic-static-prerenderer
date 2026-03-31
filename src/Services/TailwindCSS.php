@@ -19,16 +19,13 @@ class TailwindCSS
         $customCssPath = app()->resourcePath('css/headless.css');
         $cssPath = File::exists($customCssPath) ? $customCssPath : $this->binaryPath . '/../resources/css/headless.css';
 
-        $command = sprintf(
-            './%s --input %s --output %s --config %s',
-            self::getBinaryName(),
-            $cssPath,
-            Storage::path($output),
-            $tailwindCssConfigPath
-        );
-
         Process::path($this->binaryPath)
-            ->run($command)
+            ->run([
+                './' . self::getBinaryName(),
+                '--input', $cssPath,
+                '--output', Storage::path($output),
+                '--config', $tailwindCssConfigPath,
+            ])
             ->throw();
 
         return Storage::get($output);

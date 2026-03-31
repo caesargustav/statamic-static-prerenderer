@@ -5,6 +5,7 @@ namespace Caesargustav\StaticPrerenderer;
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Contracts\Taxonomies\Term as TermContract;
@@ -47,8 +48,11 @@ class PrerenderedEntity
             return view('statamic-static-prerenderer::login');
         }
 
-        if (Storage::exists($path) && Storage::lastModified($path) >= $lastModified->timestamp && $this->request) {
-            return Storage::get($path);
+        if (Storage::exists($path)) {
+            $cacheTime = Storage::lastModified($path);
+            if ($cacheTime >= $lastModified->timestamp && $cacheTime >= $this->templatesLastModified()) {
+                return Storage::get($path);
+            }
         }
 
         $this->entity->layout('statamic-static-prerenderer::layout');
@@ -75,7 +79,7 @@ class PrerenderedEntity
 
     private function cachePaths(): array
     {
-        $id = $this->entity->id() . md5(json_encode($this->request?->query->all()));
+        $id = $this->entity->id() . md5(json_encode($this->request?->query->all() ?? []));
 
         return [
             'public/statamic-static-prerenderer/'.$id.'.html',
@@ -94,5 +98,19 @@ class PrerenderedEntity
         }
 
         return $this->request->get('password') === $this->entity->data()->get('password');
+    }
+
+    private function templatesLastModified(): int
+    {
+        $paths = [__DIR__ . '/../resources'];
+
+        $publishedViews = resource_path('views/vendor/statamic-static-prerenderer');
+        if (File::isDirectory($publishedViews)) {
+            $paths[] = $publishedViews;
+        }
+
+        return collect($paths)
+            ->flatMap(fn ($path) => File::allFiles($path))
+            ->max(fn ($file) => $file->getMTime()) ?? 0;
     }
 }

@@ -86,10 +86,16 @@ class ServiceProvider extends AddonServiceProvider
                 });
 
                 Route::get('{type}/{entryId}', function (Request $request, string $type, string $entryId) {
-                    match ($type) {
-                        'entry' => $entity = Entry::find($entryId),
-                        'term' => $entity = Term::find($entryId),
+                    $entity = match ($type) {
+                        'entry' => Entry::find($entryId),
+                        'term' => Term::find($entryId),
+                        default => null,
                     };
+
+                    if (!$entity) {
+                        abort(404);
+                    }
+
                     $prerenderedEntry = PrerenderedEntity::create($entity, $request);
 
                     return response()->json([

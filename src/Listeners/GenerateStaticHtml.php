@@ -17,17 +17,12 @@ class GenerateStaticHtml
 
         // Regenerate static HTML of related pages
         $id = $event->entry->id();
-        $collectionHandle = $event->entry->collectionHandle();
 
         EntryFacade::query()
+            ->where('id', '!=', $id)
             ->get()
-            ->filter(function (Entry $entry) use ($id, $collectionHandle) {
-                $jsonData = json_encode($entry->data());
-
-                $idIsInJson = str_contains($jsonData, $id);
-                $collectionHandleIsInJson = str_contains($jsonData, $collectionHandle);
-
-                return $idIsInJson || ($entry->collectionHandle() !== $collectionHandle && $collectionHandleIsInJson);
+            ->filter(function (Entry $entry) use ($id) {
+                return str_contains(json_encode($entry->data()), $id);
             })
             ->each(fn ($entry) => PrerenderedEntity::create($entry)->prerender());
     }

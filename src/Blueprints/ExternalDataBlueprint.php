@@ -10,7 +10,7 @@ class ExternalDataBlueprint
     {
         return StatamicBlueprint::make()
             ->setContents([
-                'sections' => [
+                'tabs' => [
                     'main' => [
                         'fields' => [
                             [
