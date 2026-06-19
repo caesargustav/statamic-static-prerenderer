@@ -17,11 +17,11 @@ class TailwindCSS
         $tailwindCssConfigPath = File::exists($customTailwindCssConfigPath) ? $customTailwindCssConfigPath : '../resources/tailwind.config.js';
 
         $customCssPath = app()->resourcePath('css/headless.css');
-        $cssPath = File::exists($customCssPath) ? $customCssPath : $this->binaryPath . '/../resources/css/headless.css';
+        $cssPath = File::exists($customCssPath) ? $customCssPath : $this->binaryPath.'/../resources/css/headless.css';
 
         Process::path($this->binaryPath)
             ->run([
-                './' . self::getBinaryName(),
+                './'.self::getBinaryName(),
                 '--input', $cssPath,
                 '--output', Storage::path($output),
                 '--config', $tailwindCssConfigPath,

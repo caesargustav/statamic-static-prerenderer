@@ -26,7 +26,7 @@ class PrerenderedEntity
 
     public function data(): array
     {
-        if (!$this->isAuthorized()) {
+        if (! $this->isAuthorized()) {
             return [];
         }
 
@@ -44,7 +44,7 @@ class PrerenderedEntity
 
         $lastModified = $this->entity->lastModified();
 
-        if (!$this->isAuthorized()) {
+        if (! $this->isAuthorized()) {
             return view('statamic-static-prerenderer::login');
         }
 
@@ -79,7 +79,7 @@ class PrerenderedEntity
 
     private function cachePaths(): array
     {
-        $id = $this->entity->id() . md5(json_encode($this->request?->query->all() ?? []));
+        $id = $this->entity->id().md5(json_encode($this->request?->query->all() ?? []));
 
         return [
             'public/statamic-static-prerenderer/'.$id.'.html',
@@ -89,7 +89,7 @@ class PrerenderedEntity
 
     private function isAuthorized(): bool
     {
-        if (!$this->request) {
+        if (! $this->request) {
             return true;
         }
 
@@ -102,7 +102,7 @@ class PrerenderedEntity
 
     private function templatesLastModified(): int
     {
-        $paths = [__DIR__ . '/../resources'];
+        $paths = [__DIR__.'/../resources'];
 
         $publishedViews = resource_path('views/vendor/statamic-static-prerenderer');
         if (File::isDirectory($publishedViews)) {
