@@ -5,6 +5,10 @@ namespace Caesargustav\StaticPrerenderer;
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use League\Glide\Server;
+use Statamic\Events\AssetDeleted;
+use Statamic\Events\AssetReuploaded;
+use Statamic\Events\AssetSaved;
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntrySaved;
@@ -31,11 +35,32 @@ class ServiceProvider extends AddonServiceProvider
         EntrySaved::class => [
             Listeners\GenerateStaticHtml::class,
         ],
+        AssetSaved::class => [
+            Listeners\InvalidatePrerenderCache::class,
+        ],
+        AssetReuploaded::class => [
+            Listeners\InvalidatePrerenderCache::class,
+        ],
+        AssetDeleted::class => [
+            Listeners\InvalidatePrerenderCache::class,
+        ],
     ];
 
     public function bootAddon(): void
     {
         $this->loadRoutes();
+
+        if (config('statamic-static-prerenderer.revalidate_glide_responses', true)) {
+            $configureGlideResponse = function (Server $server): void {
+                $server->setResponseFactory(new Imaging\RevalidatingGlideResponseFactory(request()));
+            };
+
+            app()->resolving(Server::class, $configureGlideResponse);
+
+            if (app()->resolved(Server::class)) {
+                $configureGlideResponse(app(Server::class));
+            }
+        }
 
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer'),

@@ -16,6 +16,15 @@
         '75' => 'md:hls-col-span-3',
         '100' => 'md:hls-col-span-12',
     ];
+
+    $image_sizes_map = [
+        '25' => '(min-width: 1280px) 960px, (min-width: 768px) 75vw, 100vw',
+        '33' => '(min-width: 1280px) 853px, (min-width: 768px) 66vw, 100vw',
+        '50' => '(min-width: 1280px) 640px, (min-width: 768px) 50vw, 100vw',
+        '66' => '(min-width: 1280px) 427px, (min-width: 768px) 33vw, 100vw',
+        '75' => '(min-width: 1280px) 320px, (min-width: 768px) 25vw, 100vw',
+        '100' => '(min-width: 1280px) 1280px, 100vw',
+    ];
 ?}}
 
 {{ partial:statamic-static-prerenderer::pagebuilder/container }}
@@ -25,8 +34,11 @@
         </div>
 
         {{ image }}
-        <figure class="hls-col-span-12 {{ image_width_map[text_width] }} hls-rounded-lg hls-overflow-clip hls-shadow-md {{ if image_layout.value == 'left'}}hls--order-1{{ /if }}">
-            <img class="hls-object-cover hls-h-full hls-w-full" src="{{ permalink }}" alt="{{ alt }}">
+        <figure class="hls-relative hls-min-h-64 hls-col-span-12 {{ image_width_map[text_width] }} hls-rounded-lg hls-overflow-clip hls-shadow-md {{ if image_layout.value == 'left'}}hls--order-1{{ /if }}">
+            {{ partial:statamic-static-prerenderer::pagebuilder/responsive_image
+                image_classes="hls-absolute hls-inset-0 hls-object-cover hls-h-full hls-w-full"
+                :image_sizes="image_sizes_map[text_width]"
+            }}
         </figure>
         {{ /image }}
     </div>

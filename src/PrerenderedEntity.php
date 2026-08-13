@@ -2,6 +2,7 @@
 
 namespace Caesargustav\StaticPrerenderer;
 
+use Caesargustav\StaticPrerenderer\Cache\PrerenderCache;
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -82,8 +83,8 @@ class PrerenderedEntity
         $id = $this->entity->id().md5(json_encode($this->request?->query->all() ?? []));
 
         return [
-            'public/statamic-static-prerenderer/'.$id.'.html',
-            'public/statamic-static-prerenderer/'.$id.'.css',
+            PrerenderCache::DIRECTORY.'/'.$id.'.html',
+            PrerenderCache::DIRECTORY.'/'.$id.'.css',
         ];
     }
 

@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "statamic/cms": "^6.0",
-        "laravel/pint": "^1.29"
+        "laravel/pint": "^1.29",
+        "phpunit/phpunit": "^11.5"
     },
     "config": {
         "allow-plugins": {

@@ -1,7 +1,10 @@
 {{ partial:statamic-static-prerenderer::pagebuilder/container }}
     {{ image }}
         <figure class="hls-rounded-lg hls-overflow-clip hls-shadow-md">
-            <img class="hls-object-cover hls-h-full hls-w-full" src="{{ permalink }}" alt="{{ alt }}">
+            {{ partial:statamic-static-prerenderer::pagebuilder/responsive_image
+                image_classes="hls-block hls-h-auto hls-w-full"
+                image_sizes="(min-width: 1280px) 1280px, 100vw"
+            }}
         </figure>
     {{ /image }}
 {{ /partial:statamic-static-prerenderer::pagebuilder/container }}

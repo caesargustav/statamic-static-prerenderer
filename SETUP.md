@@ -207,3 +207,6 @@ resources/fieldsets/vendor/statamic-static-prerenderer/container.yaml
 - The plugin auto-injects SEO fields ("Externe Daten" tab) into all entry/term blueprints
 - API endpoints: `GET /api/static-prerenderer/` (list) and `GET /api/static-prerenderer/{type}/{id}` (detail)
 - The Tailwind binary is downloaded automatically during `composer install` — used only for static prerendering, not for live preview
+- Asset saves, reuploads, and deletes invalidate prerendered HTML by default
+- Dynamic Glide responses require browser revalidation, so crops and reuploads under the same filename are refreshed
+- Responsive image templates apply Statamic focal points through CSS `object-position`
