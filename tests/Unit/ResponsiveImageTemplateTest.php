@@ -24,6 +24,19 @@ class ResponsiveImageTemplateTest extends TestCase
         }
     }
 
+    public function test_all_responsive_glide_urls_are_absolute_for_cross_domain_embedding(): void
+    {
+        $template = file_get_contents(__DIR__.'/../../resources/views/pagebuilder/responsive_image.antlers.html');
+
+        preg_match_all('/{{\s*glide:url\b([^}]*)}}/', $template, $matches);
+
+        $this->assertNotEmpty($matches[1]);
+
+        foreach ($matches[1] as $parameters) {
+            $this->assertStringContainsString('absolute="true"', $parameters);
+        }
+    }
+
     public function test_image_with_text_creates_a_real_crop_frame_for_the_focal_point(): void
     {
         $template = file_get_contents(__DIR__.'/../../resources/views/pagebuilder/image_with_text.antlers.html');

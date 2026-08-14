@@ -1,15 +1,15 @@
 <img
     class="{{ image_classes }}"
     style="object-position: {{ focus_css }};"
-    src="{{ glide:url width="640" fit="max" quality="85" }}"
+    src="{{ glide:url width="640" fit="max" quality="85" absolute="true" }}"
     srcset="
-        {{ if width > 320 }}{{ glide:url width="320" fit="max" quality="85" }} 320w,{{ /if }}
-        {{ if width > 640 }}{{ glide:url width="640" fit="max" quality="85" }} 640w,{{ /if }}
-        {{ if width > 960 }}{{ glide:url width="960" fit="max" quality="85" }} 960w,{{ /if }}
+        {{ if width > 320 }}{{ glide:url width="320" fit="max" quality="85" absolute="true" }} 320w,{{ /if }}
+        {{ if width > 640 }}{{ glide:url width="640" fit="max" quality="85" absolute="true" }} 640w,{{ /if }}
+        {{ if width > 960 }}{{ glide:url width="960" fit="max" quality="85" absolute="true" }} 960w,{{ /if }}
         {{ if width > 1280 }}
-            {{ glide:url width="1280" fit="max" quality="85" }} 1280w
+            {{ glide:url width="1280" fit="max" quality="85" absolute="true" }} 1280w
         {{ else }}
-            {{ glide:url :width="width" fit="max" quality="85" }} {{ width }}w
+            {{ glide:url :width="width" fit="max" quality="85" absolute="true" }} {{ width }}w
         {{ /if }}
     "
     sizes="{{ image_sizes }}"
