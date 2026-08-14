@@ -46,21 +46,22 @@ class ServiceProvider extends AddonServiceProvider
         ],
     ];
 
+    public function register(): void
+    {
+        parent::register();
+
+        $this->app->extend(Server::class, function (Server $server): Server {
+            if (config('statamic-static-prerenderer.revalidate_glide_responses', true)) {
+                $server->setResponseFactory(new Imaging\RevalidatingGlideResponseFactory(request()));
+            }
+
+            return $server;
+        });
+    }
+
     public function bootAddon(): void
     {
         $this->loadRoutes();
-
-        if (config('statamic-static-prerenderer.revalidate_glide_responses', true)) {
-            $configureGlideResponse = function (Server $server): void {
-                $server->setResponseFactory(new Imaging\RevalidatingGlideResponseFactory(request()));
-            };
-
-            app()->resolving(Server::class, $configureGlideResponse);
-
-            if (app()->resolved(Server::class)) {
-                $configureGlideResponse(app(Server::class));
-            }
-        }
 
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/statamic-static-prerenderer'),
