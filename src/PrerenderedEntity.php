@@ -103,7 +103,9 @@ class PrerenderedEntity
 
     private function templatesLastModified(): int
     {
-        $paths = [__DIR__.'/../resources'];
+        // Published templates, custom CSS and the Tailwind configuration all
+        // influence the inline stylesheet embedded in prerendered content.
+        $paths = [__DIR__.'/../resources', resource_path()];
 
         $publishedViews = resource_path('views/vendor/statamic-static-prerenderer');
         if (File::isDirectory($publishedViews)) {
