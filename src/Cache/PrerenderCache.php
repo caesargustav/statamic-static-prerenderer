@@ -28,10 +28,15 @@ class PrerenderCache
         }
     }
 
-    public function has(string $entityId): bool
+    public function cachedEntityIds(iterable $entityIds): array
     {
-        return collect($this->storage->disk()->files(self::DIRECTORY))
-            ->contains(fn (string $path) => $this->matches($path, $entityId, 'html'));
+        $paths = $this->storage->disk()->files(self::DIRECTORY);
+
+        return collect($entityIds)
+            ->filter(fn (string $entityId) => collect($paths)
+                ->contains(fn (string $path) => $this->matches($path, $entityId, 'html')))
+            ->values()
+            ->all();
     }
 
     private function matches(string $path, string $entityId, string $extensions): bool

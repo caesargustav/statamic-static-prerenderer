@@ -28,17 +28,21 @@ class GenerateStaticHtml
         $changedId = $changed->id();
         $allEntries = $this->entries->query()->get();
         $entriesById = $allEntries->keyBy(fn (Entry $entry) => $entry->id());
+        $cachedEntityIds = array_flip($this->cache->cachedEntityIds($entriesById->keys()));
 
         $targetIds = collect($this->dependencies->dependentEntityIds($changed->collectionHandle()))
-            ->merge($allEntries
-                ->reject(fn (Entry $entry) => $entry->id() === $changedId)
-                ->filter(fn (Entry $entry) => str_contains((string) json_encode($entry->data()), $changedId))
-                ->map(fn (Entry $entry) => $entry->id()))
-            ->merge($allEntries
-                ->filter(fn (Entry $entry) => $this->shouldPrerender($entry)
-                    && $this->cache->has($entry->id())
-                    && ! $this->dependencies->has($entry->id()))
-                ->map(fn (Entry $entry) => $entry->id()))
+            ->merge($entriesById
+                ->filter(function (Entry $entry) use ($cachedEntityIds, $changedId) {
+                    $entityId = $entry->id();
+                    $directlyReferencesChangedEntry = $entityId !== $changedId
+                        && str_contains((string) json_encode($entry->data()), $changedId);
+                    $hasLegacyCache = isset($cachedEntityIds[$entityId])
+                        && ! $this->dependencies->has($entityId);
+
+                    return $directlyReferencesChangedEntry
+                        || ($hasLegacyCache && $this->shouldPrerender($entry));
+                })
+                ->keys())
             ->push($changedId)
             ->unique()
             ->values();

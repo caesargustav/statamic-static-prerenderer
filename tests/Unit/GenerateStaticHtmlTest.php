@@ -115,7 +115,9 @@ class GenerateStaticHtmlTest extends TestCase
         $renderedIds = [];
 
         $cache = $this->createMock(PrerenderCache::class);
-        $cache->method('has')->willReturnCallback(fn (string $id) => in_array($id, $legacyCached, true));
+        $cache->method('cachedEntityIds')->willReturnCallback(
+            fn (iterable $ids) => array_values(array_intersect([...$ids], $legacyCached)),
+        );
         $cache->method('forget')->willReturnCallback(function (string $id) use (&$forgottenIds) {
             $forgottenIds[] = $id;
         });

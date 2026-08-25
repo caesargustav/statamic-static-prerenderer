@@ -56,20 +56,22 @@ class PrerenderCacheTest extends TestCase
         (new PrerenderCache($storage))->forget('page-1');
     }
 
-    public function test_it_detects_an_existing_html_variant_for_an_exact_entity_id(): void
+    public function test_it_detects_cached_entity_ids_with_one_file_scan(): void
     {
         $hash = str_repeat('a', 32);
         $disk = $this->createMock(Filesystem::class);
-        $disk->method('files')->willReturn([
-            PrerenderCache::DIRECTORY.'/page-10'.$hash.'.html',
-            PrerenderCache::DIRECTORY.'/page-1'.$hash.'.html',
-        ]);
+        $disk->expects($this->once())
+            ->method('files')
+            ->willReturn([
+                PrerenderCache::DIRECTORY.'/page-10'.$hash.'.html',
+                PrerenderCache::DIRECTORY.'/page-1'.$hash.'.html',
+            ]);
         $storage = $this->createMock(Factory::class);
         $storage->method('disk')->willReturn($disk);
 
-        $cache = new PrerenderCache($storage);
-
-        $this->assertTrue($cache->has('page-1'));
-        $this->assertFalse($cache->has('page-2'));
+        $this->assertSame(
+            ['page-1', 'page-10'],
+            (new PrerenderCache($storage))->cachedEntityIds(['page-1', 'page-2', 'page-10']),
+        );
     }
 }
