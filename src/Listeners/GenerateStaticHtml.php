@@ -2,49 +2,69 @@
 
 namespace Caesargustav\StaticPrerenderer\Listeners;
 
-use Caesargustav\StaticPrerenderer\PrerenderedEntity;
-use Statamic\Entries\Entry;
-use Statamic\Events\EntryCreated;
+use Caesargustav\StaticPrerenderer\Cache\PrerenderCache;
+use Caesargustav\StaticPrerenderer\Dependencies\CollectionDependencyStore;
+use Caesargustav\StaticPrerenderer\Services\EntityPrerenderer;
+use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Entries\EntryRepository;
+use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Contracts\Taxonomies\TermRepository;
+use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
-use Statamic\Exceptions\NotFoundHttpException;
-use Statamic\Facades\Entry as EntryFacade;
 
 class GenerateStaticHtml
 {
-    public function handle(EntryCreated|EntrySaved $event): void
-    {
-        $entry = $event->entry;
+    public function __construct(
+        private readonly PrerenderCache $cache,
+        private readonly CollectionDependencyStore $dependencies,
+        private readonly EntryRepository $entries,
+        private readonly TermRepository $terms,
+        private readonly EntityPrerenderer $prerenderer,
+    ) {}
 
-        if (! $this->shouldPrerender($entry)) {
-            return;
+    public function handle(EntrySaved|EntryDeleted $event): void
+    {
+        $changed = $event->entry;
+        $changedId = $changed->id();
+        $allEntries = $this->entries->query()->get();
+        $entriesById = $allEntries->keyBy(fn (Entry $entry) => $entry->id());
+
+        $targetIds = collect($this->dependencies->dependentEntityIds($changed->collectionHandle()))
+            ->merge($allEntries
+                ->reject(fn (Entry $entry) => $entry->id() === $changedId)
+                ->filter(fn (Entry $entry) => str_contains((string) json_encode($entry->data()), $changedId))
+                ->map(fn (Entry $entry) => $entry->id()))
+            ->merge($allEntries
+                ->filter(fn (Entry $entry) => $this->shouldPrerender($entry)
+                    && $this->cache->has($entry->id())
+                    && ! $this->dependencies->has($entry->id()))
+                ->map(fn (Entry $entry) => $entry->id()))
+            ->push($changedId)
+            ->unique()
+            ->values();
+
+        if ($event instanceof EntrySaved) {
+            $entriesById->put($changedId, $changed);
         }
 
-        // Generate static HTML of saved page
-        $this->prerender($entry);
+        foreach ($targetIds as $entityId) {
+            $this->cache->forget($entityId);
 
-        // Regenerate static HTML of related pages
-        $id = $entry->id();
+            $entity = $entriesById->get($entityId) ?? $this->terms->find($entityId);
+            if (! $entity || ! $this->shouldPrerender($entity)) {
+                $this->dependencies->forget($entityId);
 
-        EntryFacade::query()
-            ->where('id', '!=', $id)
-            ->get()
-            ->filter(fn (Entry $entry) => $this->shouldPrerender($entry) && str_contains(json_encode($entry->data()), $id))
-            ->each(fn (Entry $entry) => $this->prerender($entry));
-    }
+                continue;
+            }
 
-    private function shouldPrerender(Entry $entry): bool
-    {
-        return $entry->published()
-            && ! $entry->private()
-            && (bool) $entry->uri();
-    }
-
-    private function prerender(Entry $entry): void
-    {
-        try {
-            PrerenderedEntity::create($entry)->prerender();
-        } catch (NotFoundHttpException) {
-            // The entry may become unroutable between lookup and render.
+            $this->prerenderer->render($entity);
         }
+    }
+
+    private function shouldPrerender(Entry|Term $entity): bool
+    {
+        return (! ($entity instanceof Entry) || $entity->published())
+            && ! $entity->private()
+            && (bool) $entity->uri();
     }
 }

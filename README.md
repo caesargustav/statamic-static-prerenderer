@@ -12,6 +12,24 @@ This addon does:
 - Invalidates prerendered HTML when asset data or files change
 - Revalidates cached Glide responses so reuploads and crops appear immediately
 - Uses Statamic focal points for responsive `object-cover` images
+- Tracks collection queries during prerendering and refreshes only affected pages
+
+## Entry cache behavior
+
+The addon records collection-scoped entry queries while it prerenders a page. No template tags,
+fields, naming rules, or project configuration are needed. Saving, unpublishing, or deleting an
+entry clears every HTML and CSS query variant for that entry and for pages that queried its
+collection. The default variant is rebuilt at once when the page remains public; other query
+variants are rebuilt when they are requested again.
+
+Direct entry references remain supported. If a page both references an entry and queries its
+collection, the addon still renders that page only once. A successful rerender replaces the
+page's old collection dependency set, so removed queries also remove their old graph edges.
+
+Existing cache files from an older addon version have no dependency record. The next entry change
+or request rebuilds each cached page once instead of trusting the old file and creates its
+dependency record. Entry queries outside an active prerender, including Control Panel queries, are
+not tracked.
 
 ## Image cache behavior
 

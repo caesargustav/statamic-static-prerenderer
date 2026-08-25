@@ -3,6 +3,8 @@
 namespace Caesargustav\StaticPrerenderer;
 
 use Caesargustav\StaticPrerenderer\Cache\PrerenderCache;
+use Caesargustav\StaticPrerenderer\Dependencies\CollectionDependencyStore;
+use Caesargustav\StaticPrerenderer\Dependencies\PrerenderContext;
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -49,11 +51,20 @@ class PrerenderedEntity
             return view('statamic-static-prerenderer::login');
         }
 
-        if (Storage::exists($path)) {
+        $dependencyStore = app(CollectionDependencyStore::class);
+
+        $cacheExists = Storage::exists($path);
+        $dependenciesExist = $dependencyStore->has($this->id());
+
+        if ($cacheExists && $dependenciesExist) {
             $cacheTime = Storage::lastModified($path);
             if ($cacheTime >= $lastModified->timestamp && $cacheTime >= $this->templatesLastModified()) {
                 return Storage::get($path);
             }
+        }
+
+        if ($cacheExists && ! $dependenciesExist) {
+            app(PrerenderCache::class)->forget($this->id());
         }
 
         $this->entity->layout('statamic-static-prerenderer::layout');
@@ -66,14 +77,26 @@ class PrerenderedEntity
         // If we don't do this, the paginator resolves the API URL as the URL is resolved from the request
         Paginator::currentPathResolver(fn () => '');
 
-        $html = $this->entity->toResponse(request())->content();
+        $context = app(PrerenderContext::class);
+        $context->begin($this->id());
 
-        // only process $html, not all content
-        $css = app(TailwindCSS::class)->process($cssPath);
+        try {
+            $html = $this->entity->toResponse(request())->content();
 
-        $style = sprintf('<style>%s</style>', $css);
+            // only process $html, not all content
+            $css = app(TailwindCSS::class)->process($cssPath);
 
-        Storage::put($path, $style.$html);
+            $style = sprintf('<style>%s</style>', $css);
+
+            Storage::put($path, $style.$html);
+            $dependencies = $context->finish();
+        } catch (\Throwable $exception) {
+            $context->discard();
+
+            throw $exception;
+        }
+
+        $dependencyStore->replace($this->id(), $dependencies);
 
         return Storage::get($path);
     }

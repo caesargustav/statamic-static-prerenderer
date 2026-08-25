@@ -2,6 +2,8 @@
 
 namespace Caesargustav\StaticPrerenderer;
 
+use Caesargustav\StaticPrerenderer\Dependencies\PrerenderContext;
+use Caesargustav\StaticPrerenderer\Query\TrackingEntryQueryBuilder;
 use Caesargustav\StaticPrerenderer\Services\TailwindCSS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,12 +12,14 @@ use Statamic\Events\AssetDeleted;
 use Statamic\Events\AssetReuploaded;
 use Statamic\Events\AssetSaved;
 use Statamic\Events\EntryBlueprintFound;
-use Statamic\Events\EntryCreated;
+use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
 use Statamic\Events\TermBlueprintFound;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Term;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Stache\Query\EntryQueryBuilder;
+use Statamic\Stache\Stache;
 use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
@@ -29,10 +33,10 @@ class ServiceProvider extends AddonServiceProvider
         TermBlueprintFound::class => [
             Listeners\AppendExternalDataBlueprint::class,
         ],
-        EntryCreated::class => [
+        EntrySaved::class => [
             Listeners\GenerateStaticHtml::class,
         ],
-        EntrySaved::class => [
+        EntryDeleted::class => [
             Listeners\GenerateStaticHtml::class,
         ],
         AssetSaved::class => [
@@ -49,6 +53,14 @@ class ServiceProvider extends AddonServiceProvider
     public function register(): void
     {
         parent::register();
+
+        $this->app->singleton(PrerenderContext::class);
+        $this->app->bind(EntryQueryBuilder::class, function ($app) {
+            return new TrackingEntryQueryBuilder(
+                $app->make(Stache::class)->store('entries'),
+                $app->make(PrerenderContext::class),
+            );
+        });
 
         $this->app->extend(Server::class, function (Server $server): Server {
             if (config('statamic-static-prerenderer.revalidate_glide_responses', true)) {
