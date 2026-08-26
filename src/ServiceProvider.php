@@ -55,12 +55,7 @@ class ServiceProvider extends AddonServiceProvider
         parent::register();
 
         $this->app->singleton(PrerenderContext::class);
-        $this->app->bind(EntryQueryBuilder::class, function ($app) {
-            return new TrackingEntryQueryBuilder(
-                $app->make(Stache::class)->store('entries'),
-                $app->make(PrerenderContext::class),
-            );
-        });
+        $this->app->booted(fn () => $this->bindEntryQueryBuilder());
 
         $this->app->extend(Server::class, function (Server $server): Server {
             if (config('statamic-static-prerenderer.revalidate_glide_responses', true)) {
@@ -68,6 +63,16 @@ class ServiceProvider extends AddonServiceProvider
             }
 
             return $server;
+        });
+    }
+
+    private function bindEntryQueryBuilder(): void
+    {
+        $this->app->bind(EntryQueryBuilder::class, function ($app) {
+            return new TrackingEntryQueryBuilder(
+                $app->make(Stache::class)->store('entries'),
+                $app->make(PrerenderContext::class),
+            );
         });
     }
 

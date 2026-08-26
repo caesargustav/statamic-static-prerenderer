@@ -7,13 +7,16 @@ use Caesargustav\StaticPrerenderer\Query\TrackingEntryQueryBuilder;
 use Caesargustav\StaticPrerenderer\ServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use League\Glide\Server;
 use PHPUnit\Framework\TestCase;
+use Statamic\Contracts\Entries\QueryBuilder;
 use Statamic\Events\EntryCreated;
 use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
 use Statamic\Stache\Query\EntryQueryBuilder;
+use Statamic\Stache\ServiceProvider as StacheServiceProvider;
 use Statamic\Stache\Stache;
 use Statamic\Stache\Stores\Store;
 
@@ -27,7 +30,7 @@ class ServiceProviderTest extends TestCase
 
     public function test_glide_server_is_extended_before_statamics_deferred_binding_resolves(): void
     {
-        $container = new Container;
+        $container = new Application(dirname(__DIR__, 2));
         $container->instance('config', new Repository([
             'statamic-static-prerenderer' => ['revalidate_glide_responses' => true],
         ]));
@@ -56,16 +59,24 @@ class ServiceProviderTest extends TestCase
         $this->assertArrayNotHasKey(EntryCreated::class, $listeners);
     }
 
-    public function test_statamics_entry_query_builder_is_extended_with_dependency_tracking(): void
+    public function test_tracking_binding_wins_when_statamic_registers_after_the_addon(): void
     {
-        $container = new Container;
+        $container = new Application(dirname(__DIR__, 2));
         $stache = $this->createMock(Stache::class);
         $stache->method('store')->with('entries')->willReturn($this->createMock(Store::class));
-        $container->instance(Stache::class, $stache);
         Container::setInstance($container);
 
         (new ServiceProvider($container))->register();
+        (new StacheServiceProvider($container))->register();
+        $container->bind(QueryBuilder::class, EntryQueryBuilder::class);
+        $container->instance(Stache::class, $stache);
+
+        $this->assertInstanceOf(EntryQueryBuilder::class, $container->make(EntryQueryBuilder::class));
+        $this->assertNotInstanceOf(TrackingEntryQueryBuilder::class, $container->make(EntryQueryBuilder::class));
+
+        $container->boot();
 
         $this->assertInstanceOf(TrackingEntryQueryBuilder::class, $container->make(EntryQueryBuilder::class));
+        $this->assertInstanceOf(TrackingEntryQueryBuilder::class, $container->make(QueryBuilder::class));
     }
 }
